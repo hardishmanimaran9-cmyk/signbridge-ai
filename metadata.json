@@ -1,0 +1,11 @@
+{
+  "name": "SignBridge AI",
+  "description": "AI-Powered Indian Sign Language Recognition and Accessible Communication System for Inclusive Interaction.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

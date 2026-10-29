@@ -1,0 +1,965 @@
+# MASTER PROMPT — SIGNBRIDGE AI
+
+## AI-Powered Indian Sign Language Recognition and Accessible Communication Platform
+
+Act as a senior full-stack developer, computer vision engineer, machine learning engineer, accessibility specialist, and UI/UX designer.
+
+Build a complete, functional, production-structured MVP named **SignBridge AI**.
+
+Do not create only a landing page, UI mockup, static dashboard, or nonfunctional prototype. Build a working application with real webcam access, hand landmark detection, a pluggable ISL recognition pipeline, text output, speech output, dataset management, and model evaluation tools.
+
+The application must run in a modern desktop browser and be designed primarily for laptop and PC webcam use.
+
+==================================================
+
+1. PROJECT VISION
+   ==================================================
+
+Project name: SignBridge AI
+
+Full title:
+AI-Powered Indian Sign Language Recognition and Accessible Communication System for Inclusive Interaction.
+
+Primary objective:
+
+Develop an accessible computer vision application that recognizes selected Indian Sign Language (ISL) signs through a webcam, converts recognized signs into readable text, and speaks the resulting messages aloud.
+
+The application is intended to support communication between:
+
+1. Deaf or hard-of-hearing sign-language users.
+2. Blind or visually impaired people who depend on spoken information.
+3. People who do not understand sign language but need to communicate with sign-language users.
+
+Example workflow:
+
+A deaf person performs a verified ISL sign in front of a webcam.
+
+The application detects the hand landmarks.
+
+The recognition engine predicts the corresponding trained sign label.
+
+The application maps that label to its verified English or Tamil message.
+
+The message appears on the screen.
+
+Text-to-speech announces the message.
+
+Example output:
+Recognized message: "I need water."
+
+Spoken output:
+"I need water."
+
+This is an illustrative example, not a claim that a particular hand pose necessarily means that phrase in ISL.
+
+Important limitation:
+ISL is a natural language, not simply a collection of universal hand poses. Begin with a clearly defined vocabulary of verified signs. Do not claim complete ISL translation or production-level accuracy without sufficient training data and independent evaluation.
+
+==================================================
+2. TARGET PLATFORM AND TECH STACK
+=================================
+
+Build a responsive web application with a desktop-first experience and mobile-friendly layout.
+
+Frontend:
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Accessible component architecture
+* Lucide icons or a comparable icon library
+
+Computer vision:
+
+* MediaPipe Hand Landmarker or Gesture Recognizer
+* OpenCV.js only when genuinely needed
+* Browser webcam access through navigator.mediaDevices.getUserMedia()
+* Canvas overlays for landmark visualization
+
+Machine learning:
+
+* Start with a documented static-gesture recognition pipeline.
+* Support an optional custom classifier trained using labeled ISL samples.
+* Use TensorFlow.js for an appropriate browser-compatible custom model, or provide a separately documented Python training pipeline with a clear model-integration interface.
+* Do not assume a scikit-learn model can execute directly in the browser.
+* If a Python backend is necessary, implement it as a separate FastAPI service with explicit API contracts.
+
+Speech:
+
+* Browser Web Speech API speechSynthesis for text-to-speech where supported.
+* Browser SpeechRecognition only as an optional voice-command enhancement, with capability detection.
+* Provide a fallback when speech services or language voices are unavailable.
+
+Data:
+
+* Start with local JSON vocabulary and browser-local settings.
+* Use IndexedDB or another appropriate local store only when persistence is required.
+* Do not require a cloud database for the MVP.
+
+Development requirements:
+
+* All major features must be implemented rather than represented by decorative buttons.
+* Use real camera input.
+* Handle permission errors.
+* Handle unavailable cameras.
+* Detect missing or incompatible browser features.
+* Provide meaningful loading, success, error, and empty states.
+
+Do not add an LLM API key merely to recognize predefined hand signs. Core recognition should work locally whenever the chosen model and browser permit it.
+
+==================================================
+3. DESIGN SYSTEM AND USER EXPERIENCE
+====================================
+
+Create a premium, modern, accessible assistive-technology interface.
+
+Visual direction:
+
+* Calm, trustworthy, professional.
+* Minimalist dashboard.
+* Strong readability.
+* Generous spacing.
+* Clear visual hierarchy.
+* Subtle shadows and rounded cards.
+* Restrained animation.
+* Avoid excessive gradients and distracting effects.
+
+Suggested color palette:
+
+* Primary: #174A8B
+* Secondary: #2463A6
+* Background: #F5F7FB
+* Surface: #FFFFFF
+* Main text: #172033
+* Secondary text: #586579
+* Success: #18794E
+* Warning: #9A6700
+* Error: #B42318
+
+Provide a dark-mode option if practical.
+
+Typography:
+
+* Use a highly readable sans-serif font.
+* Support text scaling.
+* Use sufficiently large default text.
+* Never communicate recognition status through color alone.
+
+Accessibility:
+
+* Semantic HTML.
+* Keyboard navigation.
+* Visible focus indicators.
+* Screen-reader labels.
+* High contrast.
+* Accessible dialogs.
+* Reduced-motion support.
+* Large touch targets.
+* Avoid unexpected audio.
+* Provide explicit speech controls.
+* Provide a way to silence the application immediately.
+
+The interface must support users who cannot see the webcam preview or read the recognized text.
+
+Do not assume that a blind person can independently perform an arbitrary sign simply because the webcam can recognize it. Provide audio guidance, keyboard alternatives, and an optional practice mode.
+
+==================================================
+4. APPLICATION LAYOUT
+=====================
+
+Create the following primary navigation:
+
+1. Home
+2. Live Recognition
+3. Message History
+4. Learn ISL
+5. Dataset and Model
+6. Accessibility Settings
+7. About
+
+The interface should be useful immediately, even when a trained recognition model has not yet been supplied.
+
+When the model is missing, show a clear setup state and allow the user to test hand landmark detection.
+
+Do not display fake predictions or simulated accuracy as though they were real results.
+
+HOME PAGE
+
+Include:
+
+* Project name and short explanation.
+* Start Recognition button.
+* Camera permission status.
+* Current model status.
+* Supported recognition vocabulary count.
+* Speech output status.
+* Quick-access accessibility settings.
+* A short explanation of the recognition workflow.
+* A clear warning when no trained ISL classifier is installed.
+
+LIVE RECOGNITION PAGE
+
+Create a two-column desktop layout.
+
+Left panel:
+
+* Live webcam preview.
+* Camera selection where supported.
+* Start Camera button.
+* Stop Camera button.
+* Hand landmark overlay toggle.
+* Camera status.
+* Hand detection status.
+
+Right panel:
+
+* Current prediction.
+* Confidence indicator.
+* Recognition status.
+* Recognized text.
+* Speak Message button.
+* Repeat Last Message button.
+* Add to Sentence button.
+* Clear Sentence button.
+* Undo Last Word button.
+* Speech Enable/Disable toggle.
+
+Below both panels:
+
+* Current sentence.
+* Recent recognition events.
+* Model information.
+* Error and uncertainty messages.
+
+On small screens, stack these panels vertically.
+
+MESSAGE HISTORY PAGE
+
+Display a locally stored history of messages only when the user enables history.
+
+Include:
+
+* Message.
+* Timestamp.
+* Recognition status.
+* Replay speech.
+* Copy message.
+* Delete individual record.
+* Clear all history.
+* Export text history.
+
+Default:
+History disabled until explicitly enabled.
+
+Do not store raw webcam video by default.
+
+LEARN ISL PAGE
+
+Build a vocabulary learning interface.
+
+Each entry should support:
+
+* Verified ISL label.
+* English gloss.
+* Tamil meaning.
+* Explanation.
+* Optional instructional video or reference link.
+* Static or motion-based classification type.
+* Verification status.
+* Source attribution.
+
+Use verified vocabulary data supplied by the project owner.
+
+Do not invent official ISL signs, videos, translations, or dictionary entries.
+
+When a sign has not been verified, label it clearly as a draft or demonstration entry.
+
+DATASET AND MODEL PAGE
+
+Provide:
+
+* Model status.
+* Model version.
+* Vocabulary classes.
+* Training dataset information.
+* Dataset import instructions.
+* Supported model format information.
+* Evaluation results, if available.
+* Confidence threshold setting.
+* Recognition history reset.
+* Instructions for installing a custom model.
+
+Do not pretend that browser-based landmark detection is equivalent to ISL classification.
+
+==================================================
+5. WEBCAM AND HAND LANDMARK DETECTION
+=====================================
+
+Implement real webcam access.
+
+Requirements:
+
+* Request permission only after the user presses Start Camera.
+* Use getUserMedia().
+* Stop all media tracks when the camera is stopped.
+* Clean up camera streams when the component unmounts.
+* Handle permission denial.
+* Handle no available camera.
+* Handle camera already in use.
+* Handle unsupported browsers.
+* Avoid starting multiple camera streams accidentally.
+
+Use MediaPipe Hand Landmarker or Gesture Recognizer.
+
+Where Hand Landmarker is used:
+
+* Detect up to two hands when supported by the configuration.
+* Extract the 21 landmarks for each detected hand.
+* Display landmarks and connections on a canvas overlay.
+* Use requestAnimationFrame or a suitable real-time frame processing strategy.
+* Avoid processing frames unnecessarily.
+* Keep the interface responsive.
+
+Show accurate status messages:
+
+* Camera not started.
+* Waiting for permission.
+* Camera active.
+* No hand detected.
+* Hand detected.
+* Recognition model unavailable.
+* Ready for recognition.
+* Prediction uncertain.
+
+Do not interpret hand detection as proof that a sign has been understood.
+
+==================================================
+6. ISL RECOGNITION ENGINE
+=========================
+
+Build a modular recognition architecture.
+
+Pipeline:
+
+Webcam
+-> Frame acquisition
+-> Hand landmark detection
+-> Landmark normalization
+-> Feature extraction
+-> Custom classifier
+-> Prediction smoothing
+-> Confidence and uncertainty handling
+-> Verified vocabulary mapping
+-> Text output
+-> Optional speech output
+
+STATIC SIGNS
+
+For the initial MVP:
+
+* Use normalized 21-point hand landmarks.
+* Represent one hand as 21 x 3 coordinates when all coordinates are available.
+* Normalize coordinates relative to the wrist and hand scale.
+* Handle missing hands.
+* Support left/right-hand variation where appropriate.
+* Do not assume that mirroring the image preserves every sign's meaning.
+* Do not treat every frame as an independent user message.
+
+MODEL INTERFACE
+
+Create a common interface similar to:
+
+recognize(features) -> {
+label,
+confidence,
+modelVersion,
+status
+}
+
+Possible statuses:
+
+* recognized
+* uncertain
+* unknown
+* model_unavailable
+
+Keep landmark extraction separate from classification.
+
+The first implementation may include:
+
+1. Landmark detection.
+2. A recognition interface.
+3. A small explicitly labeled demonstration classifier, only if it is genuinely implemented.
+4. A custom-model loading mechanism.
+5. Clear instructions for adding trained weights.
+
+A demonstration classifier must never claim to recognize genuine ISL unless it has been trained and evaluated using verified ISL samples.
+
+CUSTOM TRAINED MODEL
+
+Design the frontend so a compatible trained model can be loaded later.
+
+For browser inference:
+
+* Prefer a compatible TensorFlow.js model or a documented ONNX Runtime Web model where appropriate.
+* Verify model input and output shapes.
+* Validate the vocabulary label mapping.
+* Validate model version and metadata.
+* Handle model loading failures.
+* Do not load arbitrary executable code from an imported dataset.
+
+For a Python-based training option, create a separate training directory and document:
+
+* Dataset structure.
+* Landmark extraction.
+* Feature normalization.
+* Train/validation/test split.
+* Classifier training.
+* Evaluation.
+* Export format.
+* Conversion or serving requirements for browser integration.
+
+Do not promise that a Python pickle or joblib file can be imported and executed directly in a React browser application.
+
+==================================================
+7. DATASET MANAGEMENT
+=====================
+
+Support a labeled dataset with a schema similar to:
+
+{
+"sampleId": "sample_0001",
+"label": "VERIFIED_LABEL",
+"gloss": "English gloss",
+"signerId": "signer_01",
+"sessionId": "session_01",
+"recordedAt": "ISO-8601 timestamp",
+"landmarks": [],
+"source": "verified_dataset_or_consenting_signer",
+"verificationStatus": "verified"
+}
+
+This schema is illustrative and may be adapted to the actual dataset format.
+
+Dataset requirements:
+
+* Import labeled landmark samples.
+* Validate input structure.
+* Reject invalid labels.
+* Reject malformed coordinates.
+* Display class distribution.
+* Detect classes with too few examples.
+* Provide sample-count statistics.
+* Support export of landmark samples.
+* Avoid saving video unless the user explicitly chooses to.
+* Keep source and license information with imported datasets.
+* Include a data deletion feature.
+
+If a dataset contains videos rather than landmarks, provide a separate preprocessing workflow. Do not treat raw video files as if they already contain model-ready training features.
+
+DATA SOURCES
+
+Evaluate appropriate sources, including:
+
+* Amrita SLR.
+* INCLUDE.
+* Official ISL dictionary resources from the Indian Sign Language Research and Training Centre.
+
+Before using any external dataset:
+
+* Verify that it exists and can be accessed.
+* Review its license and usage restrictions.
+* Inspect its actual class labels and format.
+* Confirm whether it provides video, images, or annotations.
+* Never fabricate sample files or training metrics.
+* Never assume dictionary content is automatically licensed for bulk training.
+
+For custom recordings:
+
+* Obtain appropriate informed consent.
+* Explain the intended use.
+* Allow deletion.
+* Protect signer identities.
+* Do not publish recordings without permission.
+
+==================================================
+8. TRAINING AND EVALUATION
+==========================
+
+Create a separate model evaluation workflow.
+
+Required metrics:
+
+* Accuracy.
+* Precision.
+* Recall.
+* F1-score.
+* Per-class performance.
+* Confusion matrix.
+* Test sample count.
+* Number of classes.
+* Model version.
+* Dataset source.
+
+Use signer-independent or session-independent evaluation wherever possible.
+
+Do not randomly split adjacent frames from the same video into training and test sets. This can cause data leakage and misleadingly high scores.
+
+UNKNOWN GESTURE HANDLING
+
+Implement:
+
+* A configurable confidence threshold.
+* Prediction smoothing.
+* A minimum stability period.
+* Duplicate announcement prevention.
+* An explicit uncertain state.
+* A reset mechanism after each accepted sign.
+
+Important:
+A classifier's confidence value is not automatically a calibrated probability.
+
+Do not announce low-confidence predictions as certain messages.
+
+For emergency-related messages, make uncertainty particularly clear. Do not advertise the MVP as a reliable emergency communication device.
+
+==================================================
+9. MOTION-BASED SIGN SUPPORT
+============================
+
+Architect the system so it can later recognize moving signs.
+
+Some ISL signs depend on:
+
+* Movement.
+* Direction.
+* Speed.
+* Both hands.
+* Body position.
+* Facial expression.
+* Context.
+
+For a later phase, support sequences of normalized landmarks collected over time.
+
+Potential approaches:
+
+* LSTM.
+* Temporal convolutional networks.
+* Transformer-based sequence models.
+
+Do not implement a complex sequence model unless there is a suitable dataset and a practical evaluation plan.
+
+Provide a clean extension point for temporal recognition.
+
+If a sign cannot be reliably recognized using the current model, return UNKNOWN or UNCERTAIN instead of inventing a meaning.
+
+==================================================
+10. TEXT AND SENTENCE BUILDER
+=============================
+
+Implement a real message builder.
+
+Features:
+
+* Add an accepted recognized sign to the sentence.
+* Prevent accidental repeated words from consecutive video frames.
+* Show the current sentence.
+* Undo the last addition.
+* Remove an individual word.
+* Clear the sentence.
+* Speak the entire sentence.
+* Copy the sentence.
+* Support punctuation through user controls.
+
+Recognition events must not automatically become a sentence until the application accepts the prediction.
+
+Keep raw classifier labels separate from their displayed glosses and message mappings.
+
+Do not claim that concatenating individual English glosses produces grammatically correct ISL translation.
+
+==================================================
+11. SPEECH OUTPUT
+=================
+
+Use the browser SpeechSynthesis API for the first implementation.
+
+Features:
+
+* Speak the current message.
+* Speak the completed sentence.
+* Repeat the previous message.
+* Stop speech immediately.
+* Adjust speech rate.
+* Select an available voice.
+* Prefer a Tamil voice for Tamil output when installed.
+* Prefer an English voice for English output when installed.
+* Detect missing language voices.
+* Provide a visible and accessible fallback message.
+
+Never start speaking automatically when the application first loads.
+
+Allow the user to configure whether accepted predictions are spoken automatically.
+
+For visually impaired users:
+
+* Provide optional spoken camera status.
+* Announce recognition readiness.
+* Announce uncertain predictions when useful.
+* Provide keyboard shortcuts for repeating and stopping speech.
+* Avoid continuous announcements that overwhelm the user.
+
+For deaf or hard-of-hearing users:
+
+* Display the message clearly.
+* Show recognition status visually.
+* Provide a readable recognition history.
+* Do not rely on audio as the only source of feedback.
+
+==================================================
+12. TAMIL AND ENGLISH SUPPORT
+=============================
+
+Implement a vocabulary mapping system.
+
+Each verified sign entry should support:
+
+{
+"id": "verified_sign_id",
+"label": "MODEL_LABEL",
+"englishGloss": "English gloss",
+"englishMessage": "Verified English message",
+"tamilMessage": "Verified Tamil message",
+"signType": "static_or_dynamic",
+"verificationStatus": "verified",
+"source": "source_reference"
+}
+
+The displayed English or Tamil message must come from a verified mapping.
+
+Do not use automatic word-by-word translation as a substitute for verified meaning.
+
+If a translation is missing:
+
+* Display the verified gloss, if available.
+* State that a translated message is unavailable.
+* Do not fabricate a translation.
+
+Language settings must control the output language, not silently change the meaning of the recognized sign.
+
+==================================================
+13. ACCESSIBILITY SETTINGS
+==========================
+
+Create an accessibility settings page.
+
+Include:
+
+* Text size.
+* High contrast.
+* Dark mode.
+* Reduce motion.
+* Screen-reader-friendly layout.
+* Speech output on/off.
+* Speech rate.
+* Preferred language.
+* Automatic speech toggle.
+* Keyboard shortcuts.
+* Audio status prompts.
+* Message history on/off.
+* Clear saved local data.
+
+Suggested keyboard shortcuts:
+
+* Space: start/stop recognition when appropriate.
+* R: repeat last message.
+* S: speak current sentence.
+* Escape: stop speech or close a dialog.
+* Ctrl+Backspace: clear the sentence after confirmation.
+
+Do not capture shortcuts when the user is typing into a text field.
+
+Document the shortcuts in the UI.
+
+Persist accessibility preferences locally.
+
+==================================================
+14. PRIVACY AND SECURITY
+========================
+
+Privacy requirements:
+
+* Webcam processing should remain local by default.
+* Do not upload camera frames to an AI service.
+* Do not upload user recordings automatically.
+* Do not send raw landmarks to a remote server without explicit consent.
+* Do not store message history unless enabled.
+* Do not include secrets in frontend environment variables.
+* Do not expose API keys in browser code.
+* Validate imported files.
+* Limit dataset upload sizes.
+* Prevent unsafe HTML rendering from imported labels.
+* Clearly explain when any external service is used.
+
+The application should work without a cloud database or an LLM API key for its core recognition workflow.
+
+If an optional backend is added, document its security and data-handling requirements.
+
+==================================================
+15. OPTIONAL ACCESSIBILITY ENHANCEMENTS
+=======================================
+
+After the core application works, add these enhancements if feasible:
+
+* Guided practice mode.
+* Audio feedback when a hand enters the camera frame.
+* Simple keyboard-operated navigation.
+* Recognition confidence visualization.
+* Session statistics.
+* Exportable evaluation report.
+* Offline model management.
+* Camera troubleshooting guide.
+* Sample dataset validation tool.
+
+Do not add unnecessary login systems, payment features, advertisements, or unrelated dashboards.
+
+==================================================
+16. PROJECT STRUCTURE
+=====================
+
+Create a maintainable structure similar to:
+
+src/
+app/
+App.tsx
+routes.tsx
+components/
+WebcamPreview.tsx
+LandmarkOverlay.tsx
+RecognitionPanel.tsx
+PredictionStatus.tsx
+SentenceBuilder.tsx
+SpeechControls.tsx
+AccessibleButton.tsx
+pages/
+HomePage.tsx
+RecognitionPage.tsx
+HistoryPage.tsx
+LearnISLPage.tsx
+DatasetModelPage.tsx
+AccessibilityPage.tsx
+AboutPage.tsx
+vision/
+camera.ts
+handLandmarker.ts
+featureExtractor.ts
+recognition/
+recognizer.ts
+modelLoader.ts
+predictionSmoother.ts
+confidence.ts
+speech/
+speechService.ts
+data/
+vocabulary.ts
+translations.ts
+storage/
+settingsStore.ts
+historyStore.ts
+datasetStore.ts
+hooks/
+useCamera.ts
+useRecognition.ts
+useSpeech.ts
+types/
+recognition.ts
+vocabulary.ts
+dataset.ts
+utils/
+validation.ts
+errors.ts
+styles/
+globals.css
+
+public/
+models/
+assets/
+
+training/
+README.md
+requirements.txt
+prepare_dataset.py
+extract_landmarks.py
+train_model.py
+evaluate_model.py
+export_model.py
+
+tests/
+featureExtractor.test.ts
+predictionSmoother.test.ts
+vocabulary.test.ts
+settingsStore.test.ts
+
+README.md
+package.json
+.env.example
+
+Adapt the structure where necessary, but keep camera access, inference, speech, storage and UI logic separate.
+
+Do not create empty files just to match the proposed tree.
+
+==================================================
+17. IMPLEMENTATION PLAN
+=======================
+
+Implement the project in the following order.
+
+PHASE 1 — FOUNDATION
+
+* Inspect the available development environment.
+* Create the React and TypeScript application.
+* Configure styling and routing.
+* Build the accessible layout.
+* Start the development server.
+* Verify that the application loads.
+
+PHASE 2 — CAMERA AND LANDMARKS
+
+* Implement real webcam access.
+* Add MediaPipe hand landmark detection.
+* Draw the landmarks.
+* Implement start/stop behavior.
+* Handle camera errors.
+* Verify the workflow with actual webcam input.
+
+PHASE 3 — RECOGNITION ARCHITECTURE
+
+* Implement normalized landmark features.
+* Define the recognizer interface.
+* Implement prediction smoothing.
+* Implement confidence thresholds.
+* Add UNKNOWN and UNCERTAIN states.
+* Clearly distinguish hand detection from sign recognition.
+
+PHASE 4 — DATASET AND MODEL
+
+* Implement dataset validation and import.
+* Add a training workflow or a documented Python training pipeline.
+* Add model metadata and vocabulary mapping.
+* Integrate a real compatible trained model when supplied.
+* Display a clear message if no trained model is available.
+* Do not manufacture model accuracy or claim to have trained on unavailable data.
+
+PHASE 5 — TEXT AND SPEECH
+
+* Implement verified vocabulary mappings.
+* Build the sentence builder.
+* Integrate SpeechSynthesis.
+* Add English and Tamil language selection.
+* Implement repeat and stop controls.
+* Verify that predictions are announced only when accepted.
+
+PHASE 6 — ACCESSIBILITY
+
+* Implement keyboard navigation.
+* Add screen-reader-friendly status messages.
+* Add text scaling and high contrast.
+* Add accessible dialogs and controls.
+* Add speech preferences and privacy settings.
+* Test the interface without a mouse.
+
+PHASE 7 — TESTING AND DOCUMENTATION
+
+* Run the available automated tests.
+* Fix compilation and runtime errors.
+* Verify camera start/stop.
+* Verify landmark detection.
+* Verify model loading and failure handling.
+* Verify uncertainty handling.
+* Verify speech output and speech cancellation.
+* Verify keyboard shortcuts.
+* Verify persistence and deletion controls.
+* Document all known limitations.
+
+==================================================
+18. ACCEPTANCE CRITERIA
+=======================
+
+The project is complete only when the following conditions are satisfied:
+
+1. The application runs locally.
+2. The webcam can be started and stopped.
+3. Hand landmarks are detected from actual camera input.
+4. Camera errors are handled gracefully.
+5. The system clearly distinguishes landmark detection from sign recognition.
+6. A trained classifier can be integrated through a documented interface.
+7. Missing models produce a useful setup message rather than fabricated predictions.
+8. The application supports verified vocabulary mappings.
+9. Accepted predictions can be converted to readable text.
+10. Text can be spoken through an available speech voice.
+11. The sentence builder supports add, undo, clear and replay.
+12. Uncertain predictions are handled safely.
+13. The application is keyboard accessible.
+14. User preferences can be changed.
+15. Camera footage is not uploaded or saved by default.
+16. Automated tests are executed where available.
+17. Setup instructions are complete.
+18. Model and dataset limitations are documented.
+
+Do not mark an acceptance criterion as passed unless it has actually been tested.
+
+==================================================
+19. FINAL DELIVERABLES
+======================
+
+Deliver:
+
+1. Complete application source code.
+2. Functional React and TypeScript frontend.
+3. Webcam integration.
+4. MediaPipe hand landmark detection.
+5. Recognition engine interface.
+6. Dataset import and validation.
+7. Training and evaluation scripts or a complete documented model-training workflow.
+8. Text-to-speech integration.
+9. Sentence builder.
+10. English and Tamil vocabulary mapping support.
+11. Accessible user interface.
+12. Privacy controls.
+13. Automated tests.
+14. README with setup and execution instructions.
+15. Documentation explaining how to add a verified ISL dataset.
+16. Documentation explaining how to train and integrate a real model.
+17. A final report listing implemented features, test results, limitations and remaining work.
+
+==================================================
+20. FINAL INSTRUCTIONS
+======================
+
+Start by inspecting the environment and creating the application.
+
+Implement the actual project rather than returning a tutorial or a static mockup.
+
+Prioritize a working webcam-to-landmark pipeline first, then integrate recognition and speech.
+
+Use genuine camera data.
+
+Do not invent datasets, translations, recognition results, model files, or test results.
+
+Do not use a generative language model to guess the meaning of a hand gesture.
+
+Do not claim complete ISL translation when only a limited vocabulary classifier exists.
+
+Keep the project modular so future developers can extend it to two-hand signs, motion sequences, body landmarks and facial expressions.
+
+When finished, provide:
+
+* The exact command to install dependencies.
+* The exact command to run the application.
+* The actual implemented features.
+* Which tests passed and failed.
+* Whether a trained ISL classifier is included.
+* How to supply training data.
+* What remains to be implemented before real-world use.
+
+Build SignBridge AI as a credible, accessible engineering project with a clear path from a functional MVP to a more comprehensive ISL recognition system.
